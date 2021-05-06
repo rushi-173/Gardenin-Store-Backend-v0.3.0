@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Product = require("../models/Product");
 
+
 //Get all posts
 router.get("/", async (req, res) => {
+ 
 	try {
 		const products = await Product.find();
 		res.json(products);
@@ -35,6 +37,7 @@ router.post("/", async (req, res) => {
 		res.status(400).json({ message: err });
 	}
 });
+
 
 //specific get
 router.get("/:productId", async (req, res) => {

@@ -6,7 +6,7 @@ const verify = require("./verifyToken");
 //Get user's wishlist
 router.get("/", verify, async (req, res) => {
   try {
-    const wishlist = await Wishlist.findOne({ user: req.body.user_id });
+    const wishlist = await Wishlist.findOne({ user_id: req.user._id });
     res.json(wishlist);
   } catch (err) {
     res.json({ message: err });
@@ -15,11 +15,11 @@ router.get("/", verify, async (req, res) => {
 
 //add new user's wishlist or update previous wishlist
 router.post("/", verify, async (req, res) => {
-  const hasWishlist = await Wishlist.find({ user_id: req.body.user_id});
+  const hasWishlist = await Wishlist.find({ user_id: req.user._id});
   if(hasWishlist.length !== 0){
     try {
       const savedWishlist = await Wishlist.findOneAndUpdate(
-        { user_id: req.body.user_id },
+        { user_id: req.user._id },
         { wishlist: req.body.wishlist },
         {new: true},
         async function (err, result) {
@@ -35,7 +35,7 @@ router.post("/", verify, async (req, res) => {
   else{
    
       const wishlist = new Wishlist({
-        user: req.body.user_id,
+        user: req.user._id,
         wishlist: req.body.wishlist,
       });
       try {
